@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:studio": "npx drizzle-kit studio",
-    "db:push": "npx drizzle-kit push:pg",
+    "db:push": "npx drizzle-kit push",
     "db:seed": "tsx ./scripts/seed.ts"
   },
   "dependencies": {
@@ -38,7 +38,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",
     "drizzle-kit": "^0.21.4",
-    "eslint": "9",
+    "eslint": "^7.23.0",
     "eslint-config-next": "14.2.3",
     "pg": "^8.11.5",
     "postcss": "^8",
