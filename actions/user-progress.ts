@@ -23,9 +23,9 @@ export const upsertUserProgress = async (courseId: number) => {
   }
 
   // TODO: Enable once units and lessons are populated
-  //   if (!course.units.length || !course.units[0].lessons.length) {
-  //     throw new Error("Course has no lessons");
-  //   }
+  // if (!course.units.length || !course.units[0].lessons.length) {
+  //   throw new Error("Course has no lessons");
+  // }
 
   const existingUserProgress = await getUserProgress();
 
@@ -66,7 +66,7 @@ export const reduceHearts = async (challengeId: number) => {
   const challenge = await db.query.challenges.findFirst({
     where: eq(challenges.id, challengeId),
   });
-  
+
   if (!challenge) {
     throw new Error("Challenge not found");
   }
@@ -107,5 +107,6 @@ export const reduceHearts = async (challengeId: number) => {
   revalidatePath("/learn");
   revalidatePath("/quests");
   revalidatePath("/leaderboard");
-  revalidatePath(`/lesson/${lessonId}`)
+  revalidatePath(`/lesson/${lessonId}`);
+  
 };

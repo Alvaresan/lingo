@@ -21,13 +21,13 @@ type Props = {
   userSubscription: any;
 };
 
-export const Quiz = ({
+const Quiz: React.FC<Props> = ({
   initialPercentage,
   initialHearts,
   initialLessonId,
   initialLessonChallenges,
   userSubscription,
-}: Props) => {
+}) => {
   const [pending, startTransition] = useTransition();
   const [hearts, setHearts] = useState(initialHearts);
   const [percentage, setPercentage] = useState(initialPercentage);
@@ -40,6 +40,7 @@ export const Quiz = ({
   });
   const [selectedOption, setSelectedOption] = useState<number>();
   const [status, setStatus] = useState<"none" | "correct" | "wrong">("none");
+
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions || [];
 
@@ -49,7 +50,6 @@ export const Quiz = ({
 
   const onSelect = (id: number) => {
     if (status !== "none") return;
-
     setSelectedOption(id);
   };
 
@@ -70,7 +70,6 @@ export const Quiz = ({
     }
 
     const correctOption = options.find((option) => option.correct);
-
     if (correctOption && correctOption.id === selectedOption) {
       startTransition(() => {
         upsertChallengeProgress(challenge.id)
@@ -95,9 +94,7 @@ export const Quiz = ({
               console.error("Missing hearts");
               return;
             }
-
             setStatus("wrong");
-
             if (!response?.error) {
               setHearts((prev) => Math.max(prev - 1, 0));
             }
@@ -105,47 +102,49 @@ export const Quiz = ({
           .catch(() => toast.error("Something went wrong. Please try again."));
       });
     }
+  };
 
-    const title =
-      challenge.type === "ASSIST"
-        ? "Select the correct meaning"
-        : challenge.question;
+  const title =
+    challenge.type === "ASSIST"
+      ? "Select the correct meaning"
+      : challenge.question;
 
-    return (
-      <>
-        <Header
-          hearts={hearts}
-          percentage={percentage}
-          hasActiveSubscription={!!userSubscription?.isActive}
-        />
-        <div className="flex-1">
-          <div className="h-full flex items-center justify-center">
-            <div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
-              <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
-                {title}
-              </h1>
-              <div>
-                {challenge.type === "ASSIST" && (
-                  <QuestionBubble question={challenge.question} />
-                )}
-                <Challenge
-                  options={options}
-                  onSelect={onSelect}
-                  status={status}
-                  selectedOption={selectedOption}
-                  disabled={pending}
-                  type={challenge.type}
-                />
-              </div>
+  return (
+    <>
+      <Header
+        hearts={hearts}
+        percentage={percentage}
+        hasActiveSubscription={!!userSubscription?.isActive}
+      />
+      <div className="flex-1">
+        <div className="h-full flex items-center justify-center">
+          <div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
+            <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
+              {title}
+            </h1>
+            <div>
+              {challenge.type === "ASSIST" && (
+                <QuestionBubble question={challenge.question} />
+              )}
+              <Challenge
+                options={options}
+                onSelect={onSelect}
+                status={status}
+                selectedOption={selectedOption}
+                disabled={pending}
+                type={challenge.type}
+              />
             </div>
           </div>
         </div>
-        <Footer
-          disabled={pending || !selectedOption}
-          status={status}
-          onCheck={onContinue}
-        />
-      </>
-    );
-  };
+      </div>
+      <Footer
+        disabled={pending || !selectedOption}
+        status={status}
+        onCheck={onContinue}
+      />
+    </>
+  );
 };
+
+export default Quiz;
